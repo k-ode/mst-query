@@ -1,7 +1,12 @@
 import { destroy, IAnyModelType, IAnyStateTreeNode, Instance } from 'mobx-state-tree';
 import { action, computed, makeObservable, observableRef } from 'mobx';
 import { QueryStore } from './QueryStore';
-import type { MutationScope } from './create';
+import type { InfiniteQueryReturnType, MutationScope, QueryReturnType } from './create';
+
+export type RefetchOnWindowFocus<TQuery> =
+    | boolean
+    | 'always'
+    | ((query: TQuery) => boolean | 'always');
 
 export type EndpointType = (
     options: {
@@ -19,6 +24,7 @@ type QueryClientConfig<T extends IAnyModelType> = {
     queryOptions?: {
         staleTime?: number;
         endpoint?: EndpointType;
+        refetchOnWindowFocus?: RefetchOnWindowFocus<Instance<QueryReturnType | InfiniteQueryReturnType>>;
     };
     RootStore: T;
 };
@@ -30,6 +36,7 @@ const defaultConfig = {
         cacheTime: 0,
         refetchOnMount: 'if-stale',
         refetchOnChanged: 'all',
+        refetchOnWindowFocus: true,
     },
 };
 

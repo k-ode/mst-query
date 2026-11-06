@@ -1,4 +1,5 @@
 import { destroy, IAnyModelType, IAnyStateTreeNode, Instance } from 'mobx-state-tree';
+import { action, computed, makeObservable, observableRef } from 'mobx';
 import { QueryStore } from './QueryStore';
 import type { MutationScope } from './create';
 
@@ -49,6 +50,16 @@ export class QueryClient<T extends IAnyModelType> {
                 ...config.queryOptions,
             },
         };
+        makeObservable(this, {
+            queryStore: observableRef,
+            isMutating: computed,
+            init: action,
+            reset: action,
+        });
+    }
+
+    get isMutating() {
+        return this.queryStore?.isMutating ?? false;
     }
 
     init(initialData: any = {}, env = {}) {

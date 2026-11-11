@@ -8,6 +8,7 @@ import {
     types,
 } from 'mobx-state-tree';
 import { merge } from './merge';
+import type { EntryOf } from './QueryCollection';
 
 type MstQueryAction = 'get' | 'put' | 'delete';
 
@@ -30,8 +31,7 @@ export const createModelStore = <T extends IAnyModelType>(name: string, type: T)
                         case 'get':
                             return self.models.get(id);
                         case 'put':
-                            self.models.put(instance);
-                            break;
+                            return self.models.put(instance);
                         case 'delete':
                             self.models.delete(id);
                             break;
@@ -57,7 +57,7 @@ export const createRootStore = <T extends ModelPropertiesDeclaration>(props: T) 
             // overriding log to stop bundler from removing lookups
             const log = console.log;
             console.log = () => {};
-            for (let key in self as any) {                
+            for (let key in self as any) {
                 console.log(self[key]);
             }
             console.log = log;
@@ -69,7 +69,7 @@ export const createRootStore = <T extends ModelPropertiesDeclaration>(props: T) 
                     action: MstQueryAction,
                     type: IAnyModelType,
                     id: string,
-                    instance?: any
+                    instance?: any,
                 ) {
                     const store = modelStores.get(type.name);
                     if (!store) {
@@ -84,17 +84,14 @@ export const createRootStore = <T extends ModelPropertiesDeclaration>(props: T) 
 
                     return result;
                 },
-                runGc() {
-                    return queryClient.queryStore.runGc();
-                },
             },
             views: {
                 __getModelStores() {
                     return modelStores;
                 },
-                getQueries<T extends IAnyModelType, InstanceType = Instance<T>>(
+                getQueries<T extends IAnyModelType, InstanceType = EntryOf<Instance<T>>>(
                     query: T,
-                    matcherFn?: (query: InstanceType) => boolean
+                    matcherFn?: (query: InstanceType) => boolean,
                 ): InstanceType[] {
                     return queryClient.queryStore.getQueries(query, matcherFn);
                 },

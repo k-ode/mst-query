@@ -47,7 +47,13 @@ export function mergeInner(data: any, typeDef: any, ctx: any, cloneInstances = f
     return mergeInstance(snapshot, data, typeDef, ctx, cloneInstances);
 }
 
-export function mergeInstance(snapshot: any, data: any, typeDef: any, ctx: any, cloneInstances: boolean) {
+export function mergeInstance(
+    snapshot: any,
+    data: any,
+    typeDef: any,
+    ctx: any,
+    cloneInstances: boolean,
+) {
     // GQL object with known type, instantiate or recycle MST object
     // Try to reuse instance.
     const modelType = getSubType(typeDef, snapshot);
@@ -73,7 +79,7 @@ export function mergeInstance(snapshot: any, data: any, typeDef: any, ctx: any, 
     if (cloneInstances && instance) {
         // Build the detached result from snapshots so updating reference arrays does not
         // try to resolve their old values outside the root store.
-        const existingSnapshot = getSnapshot(instance);
+        const existingSnapshot = getSnapshot(instance) as Record<string, unknown>;
         return modelType.create(
             { ...existingSnapshot, ...mergeObjects(existingSnapshot, snapshot, typeDef) },
             ctx,
@@ -100,7 +106,12 @@ export function mergeInstance(snapshot: any, data: any, typeDef: any, ctx: any, 
             if (storedId == null) {
                 return snapshot;
             }
-            instance = ctx.queryClient.rootStore.__MstQueryAction('put', modelType, storedId, instance);
+            instance = ctx.queryClient.rootStore.__MstQueryAction(
+                'put',
+                modelType,
+                storedId,
+                instance,
+            );
         }
         const storedKey = getKey(modelType, getIdentifier(instance) as string);
         models.set(storedKey, instance);
@@ -133,7 +144,7 @@ export function mergeObjects(instance: any, data: any, typeDef: any): any {
             const isNode = isStateTreeNode(data);
             isNode && unprotect(data);
             snapshot[key] = isStateTreeNode(instance)
-                ? Object.assign(instance[key], mergedValue)
+                ? Object.assign((instance as any)[key], mergedValue)
                 : { ...instance[key], ...mergedValue };
             isNode && protect(data);
         } else if (isStateTreeNode(data[key]) && !getIdentifier(data[key])) {

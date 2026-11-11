@@ -93,7 +93,9 @@ function useEntry<T extends QuerySource>(
         (options as any).pagination = options.pagination ?? EmptyPagination;
     }
     const [observer, setObserver] = useState<QueryObserver>();
-    const previousData = useRef<{ source: T; data: any; handler: QueryObserver['handler'] } | undefined>(undefined);
+    const previousData = useRef<
+        { source: T; data: any; handler: QueryObserver['handler'] } | undefined
+    >(undefined);
     const placeholder = useRef<{ source: T; key: string; request: any; data: any } | undefined>(
         undefined,
     );
@@ -169,7 +171,8 @@ function useEntry<T extends QuerySource>(
         ) {
             const previous =
                 previousData.current?.source === source ||
-                previousData.current?.handler.type === (collection?.__entryType ?? query.__MstQueryHandler.type)
+                previousData.current?.handler.type ===
+                    (collection?.__entryType ?? query.__MstQueryHandler.type)
                     ? previousData.current?.data
                     : null;
             const value =

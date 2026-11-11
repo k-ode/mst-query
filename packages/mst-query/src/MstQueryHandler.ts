@@ -1,5 +1,13 @@
 import { equal } from '@wry/equality';
-import { makeObservable, observable, observableRef, computed, action, actionBound, autorun } from 'mobx';
+import {
+    makeObservable,
+    observable,
+    observableRef,
+    computed,
+    action,
+    actionBound,
+    autorun,
+} from 'mobx';
 import {
     addDisposer,
     getEnv,

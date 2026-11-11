@@ -36,7 +36,7 @@
         "@testing-library/react": "16.3.3",
         "@types/react": "19.3.0",
         "jsdom": "31.0.0",
-        "mobx": "7.1.4",
+        "mobx": "7.1.5",
         "mobx-react": "10.0.3",
         "mobx-state-tree": "9.0.1",
         "prettier": "3.9.10",

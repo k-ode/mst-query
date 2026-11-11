@@ -45,7 +45,7 @@ export function getSubType(t: any, data?: any): any {
     // Late types inherit their resolved type's flags, while unions and optionals
     // inherit their child types' flags. Only actual late types expose getSubType;
     // unwrap them first, and let the other wrappers use their own branches below.
-    if (isLateType(t) && typeof t.getSubType === 'function') {
+    if (isLateType(t) && typeof (t as any).getSubType === 'function') {
         return getSubType((t as any).getSubType(), data);
     } else if (isUnionType(t)) {
         const type = t as any;
@@ -133,6 +133,6 @@ export function useEvent<TCallback extends AnyFunction>(callback: TCallback): TC
  */
 function useEvent_shouldNotBeInvokedBeforeMount() {
     throw new Error(
-        'INVALID_USEEVENT_INVOCATION: the callback from useEvent cannot be invoked before the component has mounted.'
+        'INVALID_USEEVENT_INVOCATION: the callback from useEvent cannot be invoked before the component has mounted.',
     );
 }
